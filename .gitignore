@@ -1,0 +1,4 @@
+.env
+post_log.json
+__pycache__/
+*.pyc
