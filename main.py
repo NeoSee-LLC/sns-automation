@@ -4,7 +4,7 @@ import json
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from content_generator import generate_tweet, get_current_phase
+from content_generator import generate_tweet, generate_instagram_caption, get_current_phase
 from twitter_poster import post_tweet, test_connection
 from instagram_poster import post_to_instagram
 
@@ -46,7 +46,7 @@ def daily_post(dry_run: bool = False):
         result = post_tweet(tweet_text, dry_run=dry_run)
 
         print("Instagramコンテンツを生成中...")
-        instagram_caption = generate_tweet(
+        instagram_caption = generate_instagram_caption(
             supporters=SUPPORTERS_COUNT,
             days_left=DAYS_LEFT
         )

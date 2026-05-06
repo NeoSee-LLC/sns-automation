@@ -59,6 +59,40 @@ TWEET_STYLES = [
     "緊急性・希少性を訴える型",
 ]
 
+INSTAGRAM_STYLES = [
+    "共感型（日常の不安や悩みに寄り添う）",
+    "ストーリー型（使用シーンを描写）",
+    "教育型（半固体電池の仕組みや安全性を解説）",
+    "比較型（従来製品との違いを具体的に）",
+    "ライフスタイル型（どんな人の生活を変えるか）",
+    "緊急性型（クラファン終了まであとN日）",
+]
+
+INSTAGRAM_HASHTAGS = {
+    "crowdfunding": [
+        "#モバイルバッテリー", "#半固体電池", "#クラウドファンディング",
+        "#ガジェット", "#ガジェット好き", "#充電器", "#スマホアクセサリー",
+        "#Greenfunding", "#新製品", "#テック", "#安全", "#防災グッズ",
+        "#MacBook充電", "#ワイヤレス充電", "#旅行グッズ",
+        "#仕事道具", "#電池", "#環境に優しい", "#NeoSee", "#MottoS",
+    ],
+    "production": [
+        "#モバイルバッテリー", "#半固体電池", "#ガジェット", "#メイド",
+        "#製造", "#品質", "#日本", "#テック", "#NeoSee", "#MottoS",
+        "#充電器", "#スマホアクセサリー", "#ガジェット好き",
+    ],
+    "delivery": [
+        "#モバイルバッテリー", "#半固体電池", "#ガジェット", "#レビュー",
+        "#開封", "#ガジェット好き", "#充電器", "#スマホアクセサリー",
+        "#NeoSee", "#MottoS", "#テック", "#おすすめガジェット",
+    ],
+    "brand": [
+        "#モバイルバッテリー", "#半固体電池", "#ガジェット", "#ライフスタイル",
+        "#安全", "#テック", "#NeoSee", "#MottoS", "#充電器",
+        "#スマホアクセサリー", "#ガジェット好き", "#おすすめガジェット",
+    ],
+}
+
 
 def get_current_phase():
     today = datetime.now()
@@ -116,6 +150,57 @@ def generate_tweet(theme: str = None, style: str = None, supporters: int = None,
     )
 
     return message.content[0].text.strip()
+
+
+def generate_instagram_caption(theme: str = None, style: str = None, supporters: int = None, days_left: int = None) -> str:
+    phase = get_current_phase()
+    phase_info = PHASES[phase]
+
+    if not theme:
+        theme = random.choice(phase_info["themes"])
+    if not style:
+        style = random.choice(INSTAGRAM_STYLES)
+
+    context = ""
+    if supporters:
+        context += f"\n- 現在の支援者数: {supporters}人"
+    if days_left:
+        context += f"\n- 残り日数: {days_left}日"
+
+    hashtags = random.sample(INSTAGRAM_HASHTAGS[phase], min(15, len(INSTAGRAM_HASHTAGS[phase])))
+    hashtag_str = " ".join(hashtags)
+
+    prompt = f"""あなたはInstagramマーケターです。以下の商品情報をもとに、Instagram投稿のキャプションを1つ作成してください。
+
+【商品情報】
+{PRODUCT_INFO}
+
+【投稿条件】
+- フェーズ: {phase_info['description']}
+- テーマ: {theme}
+- スタイル: {style}
+- CTA: {phase_info['cta']}
+{context}
+
+【ルール】
+- 300〜500文字程度（日本語）
+- 最初の1〜2行で興味を引く（「続きを見る」より前に表示される部分）
+- 適度に改行を入れて読みやすくする
+- 絵文字を効果的に使う（多用しすぎない）
+- 最後にCTAを入れる
+- 宣伝くさくならず、価値提供を意識する
+- ハッシュタグは含めない（別途追加するため）
+
+キャプション本文のみを出力してください。ハッシュタグ・説明・前置きは不要です。"""
+
+    message = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=600,
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    caption_body = message.content[0].text.strip()
+    return f"{caption_body}\n\n.\n.\n.\n{hashtag_str}"
 
 
 def generate_weekly_content(supporters: int = None, days_left: int = None) -> list:
