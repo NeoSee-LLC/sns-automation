@@ -6,6 +6,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 from content_generator import generate_tweet, get_current_phase
 from twitter_poster import post_tweet, test_connection
+from instagram_poster import post_to_instagram
 
 load_dotenv()
 
@@ -44,12 +45,21 @@ def daily_post(dry_run: bool = False):
 
         result = post_tweet(tweet_text, dry_run=dry_run)
 
+        print("Instagramコンテンツを生成中...")
+        instagram_caption = generate_tweet(
+            supporters=SUPPORTERS_COUNT,
+            days_left=DAYS_LEFT
+        )
+        ig_index = len(load_log()) % 3
+        post_to_instagram(instagram_caption, image_index=ig_index, dry_run=dry_run)
+
         log = load_log()
         log.append({
             "datetime": datetime.now().isoformat(),
             "phase": get_current_phase(),
             "tweet_id": result["id"],
             "text": result["text"],
+            "instagram_caption": instagram_caption,
             "dry_run": dry_run
         })
         save_log(log)
