@@ -2,7 +2,9 @@ import schedule
 import time
 import json
 import os
-from datetime import datetime
+import re
+import requests
+from datetime import datetime, date
 from dotenv import load_dotenv
 from content_generator import generate_tweet, generate_instagram_caption, get_current_phase
 from twitter_poster import post_tweet, test_connection
@@ -14,8 +16,27 @@ LOG_FILE = "post_log.json"
 
 POST_TIME = "09:00"
 
-SUPPORTERS_COUNT = 137
-DAYS_LEFT = 26
+CAMPAIGN_END_DATE = date(2026, 5, 31)
+CROWDFUNDING_URL = "https://greenfunding.jp/neosee/projects/9225"
+
+
+def get_days_left() -> int:
+    remaining = (CAMPAIGN_END_DATE - date.today()).days
+    return max(0, remaining)
+
+
+def get_supporters_count() -> int:
+    try:
+        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
+        resp = requests.get(CROWDFUNDING_URL, headers=headers, timeout=10)
+        match = re.search(r'(\d[\d,]+)\s*(?:人|件).*?(?:支援|サポーター)', resp.text)
+        if match:
+            count = int(match.group(1).replace(",", ""))
+            print(f"支援者数取得成功: {count}人")
+            return count
+    except Exception as e:
+        print(f"支援者数取得失敗（デフォルト値を使用）: {e}")
+    return 147
 
 
 def load_log() -> list:
@@ -36,10 +57,14 @@ def daily_post(dry_run: bool = False):
     print(f"{'='*50}")
 
     try:
+        supporters = get_supporters_count()
+        days_left = get_days_left()
+        print(f"支援者数: {supporters}人 / 残り: {days_left}日")
+
         print("コンテンツを生成中...")
         tweet_text = generate_tweet(
-            supporters=SUPPORTERS_COUNT,
-            days_left=DAYS_LEFT
+            supporters=supporters,
+            days_left=days_left
         )
         print(f"\n生成されたツイート:\n{tweet_text}\n")
 
@@ -47,8 +72,8 @@ def daily_post(dry_run: bool = False):
 
         print("Instagramコンテンツを生成中...")
         instagram_caption = generate_instagram_caption(
-            supporters=SUPPORTERS_COUNT,
-            days_left=DAYS_LEFT
+            supporters=supporters,
+            days_left=days_left
         )
         ig_index = len(load_log()) % 3
         post_to_instagram(instagram_caption, image_index=ig_index, dry_run=dry_run)
