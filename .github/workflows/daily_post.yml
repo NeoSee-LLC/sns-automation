@@ -18,9 +18,10 @@ jobs:
           python-version: '3.11'
 
       - name: パッケージをインストール
-        run: pip install tweepy anthropic python-dotenv schedule
+        run: pip install tweepy anthropic python-dotenv schedule requests
 
       - name: X と Instagram に投稿
+        id: post
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
@@ -30,3 +31,12 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
         run: python main.py now
+
+      - name: 失敗時にMake.com Webhookへ通知
+        if: failure()
+        env:
+          MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+        run: |
+          curl -s -X POST "$MAKE_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d '{"error": "GitHub Actions の自動投稿が失敗しました。ログを確認してください。", "image_url": "", "caption": ""}' || true

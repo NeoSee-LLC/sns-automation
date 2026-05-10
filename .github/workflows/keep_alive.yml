@@ -1,0 +1,23 @@
+name: Keep Alive
+
+on:
+  schedule:
+    - cron: '0 0 1 */2 *'  # 2ヶ月ごと月初に実行
+  workflow_dispatch:
+
+jobs:
+  keep_alive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: スケジュールを維持するためのコミット
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          date -u > last_keepalive.txt
+          git add last_keepalive.txt
+          git commit -m "chore: keep alive [skip ci]"
+          git push
