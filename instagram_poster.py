@@ -9,13 +9,12 @@ MAKE_WEBHOOK_URL = os.getenv("MAKE_WEBHOOK_URL")
 
 BASE = "https://raw.githubusercontent.com/NeoSee-LLC/sns-automation/main"
 IMAGE_URLS = [
-    f"{BASE}/3.png",
-    f"{BASE}/4.png",
-    f"{BASE}/5.png",
-    f"{BASE}/6.png",
-    f"{BASE}/7.png",
-    f"{BASE}/8.png",
-    f"{BASE}/9.png",
+    f"{BASE}/00.png",
+    f"{BASE}/01.png",
+    f"{BASE}/02.png",
+    f"{BASE}/03.png",
+    f"{BASE}/04.png",
+    f"{BASE}/05.png",
     f"{BASE}/10.png",
     f"{BASE}/11.png",
     f"{BASE}/12.png",
@@ -23,6 +22,21 @@ IMAGE_URLS = [
     f"{BASE}/14.png",
     f"{BASE}/15.png",
     f"{BASE}/16.png",
+    f"{BASE}/17.png",
+    f"{BASE}/18.png",
+    f"{BASE}/19.png",
+    f"{BASE}/20.png",
+    f"{BASE}/21.png",
+    f"{BASE}/22.png",
+    f"{BASE}/23.png",
+    f"{BASE}/24.png",
+    f"{BASE}/25.png",
+    f"{BASE}/26.png",
+    f"{BASE}/27.png",
+    f"{BASE}/31.png",
+    f"{BASE}/32.png",
+    f"{BASE}/33.png",
+    f"{BASE}/34.png",
 ]
 
 MAX_RETRIES = 3

@@ -75,7 +75,7 @@ def daily_post(dry_run: bool = False):
             supporters=supporters,
             days_left=days_left
         )
-        ig_index = (date.today().toordinal() + 8) % 14
+        ig_index = (date.today().toordinal() + 14) % 28
         post_to_instagram(instagram_caption, image_index=ig_index, dry_run=dry_run)
 
         log = load_log()
