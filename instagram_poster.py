@@ -7,10 +7,22 @@ load_dotenv()
 
 MAKE_WEBHOOK_URL = os.getenv("MAKE_WEBHOOK_URL")
 
+BASE = "https://raw.githubusercontent.com/NeoSee-LLC/sns-automation/main"
 IMAGE_URLS = [
-    "https://raw.githubusercontent.com/NeoSee-LLC/sns-automation/main/10.png",
-    "https://raw.githubusercontent.com/NeoSee-LLC/sns-automation/main/11.png",
-    "https://raw.githubusercontent.com/NeoSee-LLC/sns-automation/main/12.png",
+    f"{BASE}/3.png",
+    f"{BASE}/4.png",
+    f"{BASE}/5.png",
+    f"{BASE}/6.png",
+    f"{BASE}/7.png",
+    f"{BASE}/8.png",
+    f"{BASE}/9.png",
+    f"{BASE}/10.png",
+    f"{BASE}/11.png",
+    f"{BASE}/12.png",
+    f"{BASE}/13.png",
+    f"{BASE}/14.png",
+    f"{BASE}/15.png",
+    f"{BASE}/16.png",
 ]
 
 MAX_RETRIES = 3
