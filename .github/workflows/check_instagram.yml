@@ -1,18 +1,18 @@
-name: 毎日X自動投稿
+name: Instagram投稿確認・リトライ
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 毎日 午前9時 JST (UTC 0:00)
-  workflow_dispatch:       # 手動実行ボタンも有効化
+    - cron: '30 3 * * *'  # 毎日 12:30 JST (UTC 3:30) に確認
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  post:
+  check-and-retry:
     runs-on: ubuntu-latest
     steps:
-      - name: コードを取得
+      - name: コードを取得（最新ログ含む）
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -23,9 +23,9 @@ jobs:
           python-version: '3.11'
 
       - name: パッケージをインストール
-        run: pip install tweepy anthropic python-dotenv schedule requests
+        run: pip install tweepy anthropic python-dotenv requests
 
-      - name: X と Instagram に投稿
+      - name: 投稿状態を確認・未投稿ならリトライ
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
@@ -34,13 +34,14 @@ jobs:
           X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
-        run: python main.py now
+        run: python main.py check-and-retry
 
       - name: 投稿ログをリポジトリにコミット
         if: always()
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
+          git pull --rebase origin main
           git add post_log.json
-          git diff --staged --quiet || git commit -m "chore: 投稿ログ更新 [skip ci]"
+          git diff --staged --quiet || git commit -m "chore: リトライ後ログ更新 [skip ci]"
           git push
