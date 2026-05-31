@@ -9,12 +9,12 @@ load_dotenv()
 
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-LINE_URL = "https://lin.ee/XXXXXXX"  # ← MottoS LINE公式アカウントのURLに変更
+LINE_URL = "https://lin.ee/Spj62DL"
 
 PRODUCT_INFO = """
 商品名: MSMB10K（半固体電池搭載モバイルバッテリー）
 販売元: NeoSee合同会社 / ブランド: MottoS
-販売予定: Amazon（2025年夏〜）
+販売予定: Amazon（2026年夏〜）
 
 主な特徴:
 - 半固体電池採用：発火・液漏れ・熱暴走のリスクを根本から低減
