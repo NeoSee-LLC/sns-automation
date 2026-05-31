@@ -9,10 +9,12 @@ load_dotenv()
 
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
+LINE_URL = "https://lin.ee/XXXXXXX"  # ← MottoS LINE公式アカウントのURLに変更
+
 PRODUCT_INFO = """
 商品名: MSMB10K（半固体電池搭載モバイルバッテリー）
-販売元: NeoSee合同会社
-クラファンURL: https://greenfunding.jp/neosee/projects/9225
+販売元: NeoSee合同会社 / ブランド: MottoS
+販売予定: Amazon（2025年夏〜）
 
 主な特徴:
 - 半固体電池採用：発火・液漏れ・熱暴走のリスクを根本から低減
@@ -23,30 +25,29 @@ PRODUCT_INFO = """
 - 約1,000回の充放電（従来製品の約2倍）
 - LCD画面で残量を1%単位で表示
 - iPhone約2回フル充電可能
-- 価格：¥7,350〜（クラファン限定割引）
-- 通常販売予定価格：¥9,800
+- 販売予定価格：¥9,800
 """
 
 PHASES = {
     "crowdfunding": {
         "description": "クラファン訴求期（〜5/31）",
         "themes": ["安全性", "スペック", "社会的証明", "緊急訴求"],
-        "cta": "今すぐGreenfundingで支援する→ https://greenfunding.jp/neosee/projects/9225"
+        "cta": f"今すぐGreenfundingで支援する→ https://greenfunding.jp/neosee/projects/9225"
     },
     "production": {
         "description": "製造・出荷準備期（6月）",
-        "themes": ["製造進捗", "舞台裏レポート", "品質へのこだわり"],
-        "cta": "一般販売もまもなく開始予定！フォローして情報をゲット"
+        "themes": ["製造の舞台裏", "品質へのこだわり", "Amazon販売予告", "半固体電池の安全性"],
+        "cta": f"Amazon販売開始を一番早くお知らせ！LINEを登録してね→ {LINE_URL}"
     },
     "delivery": {
         "description": "出荷・レビュー期（7月〜）",
-        "themes": ["購入者レビュー", "使用シーン", "活用法紹介"],
-        "cta": "一般販売中→ https://greenfunding.jp/neosee/projects/9225"
+        "themes": ["購入者の声・レビュー", "使用シーン紹介", "活用法・Tips", "安全性の実感"],
+        "cta": f"Amazon販売中！詳細はLINEで→ {LINE_URL}"
     },
     "brand": {
         "description": "ブランド構築期（8月〜）",
-        "themes": ["ライフスタイル提案", "ユーザーストーリー", "製品哲学"],
-        "cta": "NeoSeeの安全バッテリーで、毎日をもっと安心に"
+        "themes": ["ライフスタイル提案", "ユーザーストーリー", "製品哲学", "安心・安全な暮らし"],
+        "cta": f"MottoS公式LINEで最新情報をゲット→ {LINE_URL}"
     }
 }
 
@@ -65,7 +66,7 @@ INSTAGRAM_STYLES = [
     "教育型（半固体電池の仕組みや安全性を解説）",
     "比較型（従来製品との違いを具体的に）",
     "ライフスタイル型（どんな人の生活を変えるか）",
-    "緊急性型（クラファン終了まであとN日）",
+    "期待感醸成型（発売を楽しみにしてもらう）",
 ]
 
 INSTAGRAM_HASHTAGS = {
@@ -77,19 +78,22 @@ INSTAGRAM_HASHTAGS = {
         "#仕事道具", "#電池", "#環境に優しい", "#NeoSee", "#MottoS",
     ],
     "production": [
-        "#モバイルバッテリー", "#半固体電池", "#ガジェット", "#メイド",
-        "#製造", "#品質", "#日本", "#テック", "#NeoSee", "#MottoS",
+        "#モバイルバッテリー", "#半固体電池", "#ガジェット", "#新製品",
+        "#製造", "#品質", "#メイドインジャパン", "#テック", "#NeoSee", "#MottoS",
         "#充電器", "#スマホアクセサリー", "#ガジェット好き",
+        "#Amazon", "#もうすぐ販売", "#安全", "#防災グッズ",
     ],
     "delivery": [
         "#モバイルバッテリー", "#半固体電池", "#ガジェット", "#レビュー",
         "#開封", "#ガジェット好き", "#充電器", "#スマホアクセサリー",
         "#NeoSee", "#MottoS", "#テック", "#おすすめガジェット",
+        "#Amazon購入", "#ガジェットレビュー", "#安全", "#旅行グッズ",
     ],
     "brand": [
         "#モバイルバッテリー", "#半固体電池", "#ガジェット", "#ライフスタイル",
         "#安全", "#テック", "#NeoSee", "#MottoS", "#充電器",
         "#スマホアクセサリー", "#ガジェット好き", "#おすすめガジェット",
+        "#Amazon", "#仕事道具", "#旅行グッズ",
     ],
 }
 
